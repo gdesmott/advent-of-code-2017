@@ -4,3 +4,5 @@ version = "0.1.0"
 authors = ["Guillaume Desmottes <guillaume@desmottes.be>"]
 
 [dependencies]
+structopt = "0.1.5"
+structopt-derive = "0.1.5"
