@@ -36,11 +36,34 @@ fn parse(input: &File) -> Vec<Vec<u32>> {
     sheet
 }
 
+fn find_evenly_divisible(row: &Vec<u32>) -> Option<u32> {
+    for num in row {
+        for den in row {
+            if num != den && num % den == 0 {
+                return Some(num / den);
+            }
+        }
+    }
+    None
+}
+
+fn compute2(input: &Vec<Vec<u32>>) -> u32 {
+    let mut sum = 0;
+
+    for row in input {
+        sum += find_evenly_divisible(row).unwrap();
+    }
+
+    sum
+}
+
 #[derive(StructOpt)]
 #[structopt(name = "day-2", about = "http://adventofcode.com/2017/day/2")]
 struct Opt {
     #[structopt(help = "Input file")]
     input: String,
+    #[structopt(short = "s", help = "Second part")]
+    second_part: bool,
 }
 
 fn main() {
@@ -48,7 +71,12 @@ fn main() {
     let f = File::open(opt.input).expect("Failed to open input file");
     let s = parse(&f);
 
-    println!("{}", compute(&s));
+    let result = match opt.second_part {
+        true => compute2(&s),
+        false => compute(&s),
+    };
+
+    println!("{}", result);
 }
 
 #[cfg(test)]
@@ -68,5 +96,13 @@ mod tests {
 
         let s = parse(&f);
         assert_eq!(compute(&s), 18);
+    }
+
+    #[test]
+    fn example2() {
+        let f = File::open("examples/day-2/second.txt").expect("Failed to open example");
+
+        let s = parse(&f);
+        assert_eq!(compute2(&s), 9);
     }
 }
